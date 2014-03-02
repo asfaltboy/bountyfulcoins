@@ -188,6 +188,13 @@ ROOT_URLCONF = 'bountyfulcoins.urls'
 WSGI_APPLICATION = 'bountyfulcoins.wsgi.application'
 LOGIN_URL = '/login/'
 
+TEST_RUNNER = 'django_coverage.coverage_runner.CoverageRunner'
+COVERAGE_MODULE_EXCLUDES = [
+    'tests$', 'settings$', 'urls$', 'locale$', 'fixtures$'
+    'common.views.test', '__init__', 'django',
+    'migrations', 'south', 'registration', 'devserver', 'captcha'
+]
+
 ACCOUNT_ACTIVATION_DAYS = 7  # One-week activation window
 RECAPTCHA_USE_SSL = True
 RECAPTCHA_PUBLIC_KEY = '6Ld6Su8SAAAAAEjAGF4Lt3mOzfhK6snc3Ub_SYBt'
