@@ -23,4 +23,4 @@ webtest==2.0.14
 mock==1.0.1
 coverage==3.7.1
 django-coverage==1.2.4
-coveralls-python==0.4.1
+coveralls==0.4.1
