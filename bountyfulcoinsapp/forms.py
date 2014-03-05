@@ -95,7 +95,7 @@ class BountySaveForm(forms.ModelForm):
             if created:
                 shared.users_voted.add(user)
 
-        if data['featured']:
+        if data['featured'] and not bounty.is_featured:
             bounty.feature()
         return bounty
 

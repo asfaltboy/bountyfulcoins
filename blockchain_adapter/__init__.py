@@ -26,7 +26,7 @@ class BlockChainAdapter(object):
         return self.url_balance.format(base=self.url_base, addr=addr)
 
     def get_balance(self, address):
-
+        logger.debug('Entering get_balance')
         if 'TEST_BLOCKCHAIN_BALANCE' in os.environ:
             return float(os.environ['TEST_BLOCKCHAIN_BALANCE'])
 

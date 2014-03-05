@@ -71,8 +71,7 @@ class Bounty(models.Model):
         except Address.DoesNotExist:
             raise Exception('No assignable addresses found, '
                             'cannot feature this bounty')
-        self.featured = FeaturedBounty.objects.create(address=addr)
-        self.featured.save()
+        self.featured = FeaturedBounty.objects.create(address=addr, bounty=self)
         return self.featured
 
     @property
