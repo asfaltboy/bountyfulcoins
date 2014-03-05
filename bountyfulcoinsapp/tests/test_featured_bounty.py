@@ -1,9 +1,10 @@
-import os
+import mock
 
 from django.core.urlresolvers import reverse
 
 from django_webtest import WebTest
 
+from blockchain_adapter import blockchain
 from bountyfulcoinsapp.models import FeaturedBounty, Address
 from bountyfulcoinsapp.forms import BountySaveForm
 
@@ -18,10 +19,8 @@ class TestFeaturedBounty(BountyCreateMixin, SiteDataMixin, WebTest):
         super(TestFeaturedBounty, self).setUp()
         self.data = self.good_data.copy()
         self.data['featured'] = True
-        os.environ['TEST_BLOCKCHAIN_BALANCE'] = '2.0'
-
-    def tearDown(self):
-        os.environ.pop('TEST_BLOCKCHAIN_BALANCE', None)
+        self.good_balance = 2.0
+        self.bad_balance = 0.0001
 
     def test_no_assignable_addresses(self):
         Address.objects.get(verified_balance=0.00).delete()  # remove available
@@ -63,7 +62,9 @@ class TestFeaturedBounty(BountyCreateMixin, SiteDataMixin, WebTest):
         bounty = self._create_bounty(self.data)
         self.assertIsNotNone(self._get_featured(bounty),
                              'A featured bounty does not exist')
-        os.environ['TEST_BLOCKCHAIN_BALANCE'] = '0.0001'
+
+        # blockchain.get_balance_url = mock.Mock()
+        blockchain.get_balance = mock.Mock(return_value=0.0001)
         self.assertFalse(bounty.featured.enabled,
                          'Feature should not be enabled')
 
@@ -79,6 +80,7 @@ class TestFeaturedBounty(BountyCreateMixin, SiteDataMixin, WebTest):
         self.assertEqual(addr.verified_balance, 1.00)
 
         # force sync_verified_balance to return what we want
+        blockchain.get_balance = mock.Mock(return_value=2.0)
         self.assertTrue(addr.sync_verified_balance())
         addr = Address.objects.get(pk=addr.pk)  # fetch again
         self.assertEqual(addr.verified_balance, 2.00)

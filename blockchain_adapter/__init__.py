@@ -1,5 +1,4 @@
 import logging
-import os
 import unittest
 
 import requests
@@ -27,8 +26,6 @@ class BlockChainAdapter(object):
 
     def get_balance(self, address):
         logger.debug('Entering get_balance')
-        if 'TEST_BLOCKCHAIN_BALANCE' in os.environ:
-            return float(os.environ['TEST_BLOCKCHAIN_BALANCE'])
 
         res = requests.get(self.get_balance_url(address), params={
             'confirmations': CONFIRMATIONS_MIN})
