@@ -26,9 +26,13 @@ class BountyCreateMixin(object):
             'featured': False,  # defaults to False
         }
 
-    def _get_bounty_form(self, new=False):
-        create_bounty = self.app.get(self.create_url, user='test')
-        return create_bounty.form
+    def _get_bounty_form(self, new=True, pk=None):
+        if new:
+            page = self.app.get(self.create_url, user='test')
+        else:
+            page = self.app.get(reverse('change_bounty',
+                                args=[pk]), user='test')
+        return page.form
 
     def _create_bounty(self, data):
         create_form = self._get_bounty_form()
